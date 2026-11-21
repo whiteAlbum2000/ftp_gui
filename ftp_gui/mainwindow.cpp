@@ -102,7 +102,7 @@ void MainWindow::dir_combo_changed(const QString &text)
                 local_file_view->setCurrentItem((*it_f));
             ++it_f;
         }
-        local_file_view->currentItem()->setExpanded(true);
+        if (auto cur = local_file_view->currentItem()) cur->setExpanded(true);
 }
 void MainWindow::click_item_inDir(QTreeWidgetItem *item)
 {
@@ -164,11 +164,11 @@ void MainWindow::local_view()
 {
     local_site->header()->hide();
 
-    auto first_layer = new QTreeWidgetItem(*new QStringList() << "usr",_DIR);
+    auto first_layer = new QTreeWidgetItem(QStringList() << "usr",_DIR);
     local_site->addTopLevelItem(first_layer);
-    auto second_layer = new QTreeWidgetItem(*new QStringList() << "bin",_DIR);
+    auto second_layer = new QTreeWidgetItem(QStringList() << "bin",_DIR);
     first_layer->addChild(second_layer);
-    second_layer->addChild(new QTreeWidgetItem(*new QStringList() << "apt" << "18824",_FILE));
+    second_layer->addChild(new QTreeWidgetItem(QStringList() << "apt" << "18824",_FILE));
 
     QTreeWidgetItemIterator local_it(local_site);
     while (*local_it) {
@@ -177,7 +177,7 @@ void MainWindow::local_view()
             ++local_it;
         }
     connect(local_site,SIGNAL(itemClicked(QTreeWidgetItem*,int)),this, SLOT(click_item_inDir(QTreeWidgetItem*)));
-    local_file_view->setHeaderLabels(*new QStringList() << "Filename" << "Filesize");
+    local_file_view->setHeaderLabels(QStringList() << "Filename" << "Filesize");
     local_file_view->addTopLevelItem(first_layer->clone());
 
     connect(local_file_view,SIGNAL(itemClicked(QTreeWidgetItem*,int)),this, SLOT(click_item_inDir(QTreeWidgetItem*)));
@@ -185,11 +185,11 @@ void MainWindow::local_view()
 void MainWindow::remote_view()
 {
     remote_site->header()->hide();
-    auto remote_first_layer = new QTreeWidgetItem(*new QStringList() << "For_Windows",_DIR);
+    auto remote_first_layer = new QTreeWidgetItem(QStringList() << "For_Windows",_DIR);
     remote_site->addTopLevelItem(remote_first_layer);
-    auto remote_second =new QTreeWidgetItem(*new QStringList() << "Anti_Virus",_DIR);
+    auto remote_second =new QTreeWidgetItem(QStringList() << "Anti_Virus",_DIR);
     remote_first_layer->addChild(remote_second);
-    remote_second->addChild(new QTreeWidgetItem(*new QStringList() << "Kaspersky" << "42881",_FILE));
+    remote_second->addChild(new QTreeWidgetItem(QStringList() << "Kaspersky" << "42881",_FILE));
 
     QTreeWidgetItemIterator remote_it(remote_site);
     while (*remote_it) {
@@ -198,7 +198,7 @@ void MainWindow::remote_view()
             ++remote_it;
         }
     connect(remote_site,SIGNAL(itemClicked(QTreeWidgetItem*,int)),this, SLOT(remote_click_item_inDir(QTreeWidgetItem*)));
-    remote_file_view->setHeaderLabels(*new QStringList() << "Filename" << "Filesize");
+    remote_file_view->setHeaderLabels(QStringList() << "Filename" << "Filesize");
     remote_file_view->addTopLevelItem(remote_first_layer->clone());
 
     connect(remote_file_view,SIGNAL(itemClicked(QTreeWidgetItem*,int)),this, SLOT(remote_click_item_inDir(QTreeWidgetItem*)));
@@ -230,7 +230,7 @@ QWidget* MainWindow::status()
     auto transfer_status = new QTabWidget();
     auto queue = new QTableWidget(1, 6);
 
-    queue->setHorizontalHeaderLabels(*new QStringList()<< "Server/Local file" << "Direction" << "Remote file" <<"Size"
+    queue->setHorizontalHeaderLabels(QStringList()<< "Server/Local file" << "Direction" << "Remote file" <<"Size"
                                      << "Priority" << "Status");
     queue->verticalHeader()->hide();
     transfer_status->setTabPosition(QTabWidget::South);
